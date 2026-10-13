@@ -4,9 +4,11 @@
   "name": "Tiny Tapeout Dev Container",
   "build": {
     "dockerfile": "Dockerfile",
-    "context": ".."
+    "context": "..",
+    "options": ["--platform=linux/amd64"]
   },
   "runArgs": [
+    "--platform=linux/amd64",
     "--memory=10GB"
   ],
   "customizations": {
