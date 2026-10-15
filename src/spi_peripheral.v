@@ -66,7 +66,6 @@ module spi_peripheral (
             bit_count <= 5'b0;
             transaction_ready <= 1'b0;
         end else if (ncs_fall) begin
-            shift_reg <= 16'b0;
             bit_count <= 5'b0;
             transaction_ready <= 1'b0;
         end else if (ncs_rise) begin
