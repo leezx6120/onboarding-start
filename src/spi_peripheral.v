@@ -58,18 +58,13 @@ module spi_peripheral (
 
     reg [15:0] shift_reg;
     reg [4:0] bit_count;
-    reg transaction_ready;
 
     always @(posedge clk or negedge rst_n) begin
         if (rst_n == 1'b0) begin
             shift_reg <= 16'b0;
             bit_count <= 5'b0;
-            transaction_ready <= 1'b0;
         end else if (ncs_fall) begin
             bit_count <= 5'b0;
-            transaction_ready <= 1'b0;
-        end else if (ncs_rise) begin
-            transaction_ready <= (bit_count == 5'd16);
         end else if (!ncs_sync2 && sclk_rise) begin
             if (bit_count < 5'd16) begin
                 shift_reg <= {shift_reg [14:0], copi_sync2};
@@ -80,8 +75,6 @@ module spi_peripheral (
         end
     end
 
-    reg transaction_processed;
-
     always @(posedge clk or negedge rst_n) begin
         if (rst_n == 1'b0) begin
             en_reg_out_7_0 <= 8'b0;
@@ -89,7 +82,6 @@ module spi_peripheral (
             en_reg_pwm_15_8 <= 8'b0;
             en_reg_pwm_7_0 <= 8'b0;
             pwm_duty_cycle <= 8'b0;
-            transaction_processed <= 1'b0;
         end else if (transaction_ready && !transaction_processed) begin
             if (shift_reg [15]) begin
                 case (shift_reg [14:8])
@@ -102,10 +94,7 @@ module spi_peripheral (
                     end
                 endcase
             end
-            transaction_processed <= 1'b1;
-        end else if (!transaction_ready && transaction_processed) begin
-            transaction_processed <= 1'b0;
-        end
+        end 
     end
 
 endmodule
